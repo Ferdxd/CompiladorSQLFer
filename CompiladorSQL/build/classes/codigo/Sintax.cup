@@ -1,0 +1,80 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Numero,
+    Delimitador,
+    Linea,
+    Identificador,
+    Palabra_clave,
+    Cadena,
+    Parentesis,
+    Error,
+    Operador,
+    Select,
+    Delete,
+    Update,
+    Insert,
+    Set,
+    From,
+    Where,
+    Asterisco,
+    Igual,
+    P_coma,
+    Values
+;
+
+non terminal ENTRADA,
+Sintax_SELECT,
+Sintax_UPDATE,
+Sintax_DELETE,
+Sintax_INSERT,
+USEDB
+;
+
+start with ENTRADA;
+
+ENTRADA ::= Sintax_SELECT
+            |Sintax_UPDATE
+            |Sintax_DELETE
+            |Sintax_INSERT
+            |USEDB
+;    
+
+Sintax_SELECT ::= Select Asterisco From Identificador P_coma 
+           |Select Identificador From Identificador P_coma
+           |Select Identificador Delimitador Identificador From Identificador P_coma    
+           |Select Identificador Delimitador Identificador Delimitador Identificador From Identificador P_coma       
+           |Select Identificador Delimitador Identificador From Identificador Where Identificador Igual Cadena P_coma  
+           |Select Identificador From Identificador Where Identificador Igual Cadena P_coma   
+          
+;
+
+Sintax_UPDATE ::= Update Identificador Set Identificador Igual Cadena Delimitador Identificador Igual Cadena Where Identificador Igual Cadena P_coma
+           |Update Identificador Set Identificador Igual Cadena Where Identificador Igual Cadena Palabra_clave Identificador Igual Cadena Palabra_clave Identificador Igual Cadena P_coma
+;
+
+Sintax_DELETE ::= Delete Asterisco From Identificador P_coma
+           |Delete From Identificador Identificador Igual Cadena P_coma
+;
+
+Sintax_INSERT ::= Insert Palabra_clave Identificador Values Parentesis Cadena Delimitador Cadena Parentesis P_coma
+           |Insert Palabra_clave Identificador Values Parentesis Numero Delimitador Cadena Parentesis P_coma
+;
+USEDB ::= Palabra_clave Identificador Palabra_clave P_coma
+;
+
+
